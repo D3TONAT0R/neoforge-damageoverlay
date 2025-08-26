@@ -6,6 +6,7 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
 
 public class HealthOverlayLayer implements LayeredDraw.Layer {
@@ -13,7 +14,13 @@ public class HealthOverlayLayer implements LayeredDraw.Layer {
     private static final ResourceLocation OVERLAY_TEXTURE = ResourceLocation.fromNamespaceAndPath(HealthOverlay.MODID,
             "textures/gui/damage_overlay.png");
 
-    float currentAlpha = 0;
+    private float currentAlpha = 0;
+    private float currentFlashAlpha = 0;
+
+    public void onPlayerDamage(float damage) {
+        float flashAlpha = Math.clamp(damage * 0.125f, 0, 1);
+        currentFlashAlpha = Math.max(currentFlashAlpha, flashAlpha);
+    }
 
     @Override
     public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
@@ -27,19 +34,30 @@ public class HealthOverlayLayer implements LayeredDraw.Layer {
             return;
         }
 
-        int healthMax = 10;
-        int healthMin = 1;
-        float health = player.getHealth();
+        renderHealthOverlay(guiGraphics, deltaTracker, player);
+        renderFlashOverlay(guiGraphics, deltaTracker);
+    }
 
+    private void renderHealthOverlay(GuiGraphics guiGraphics, DeltaTracker deltaTracker, LocalPlayer player) {
+        int healthMax = Config.OVERLAY_END_HEALTH.getAsInt();
+        int healthMin = Config.OVERLAY_START_HEALTH.getAsInt();
+        if(healthMax < healthMin + 1) {
+            //Ensure separation of 1 health
+            healthMax = healthMin + 1;
+        }
+        float health = player.getHealth();
         float targetAlpha = 1f - Math.clamp((health - healthMin) / (float) (healthMax - healthMin), 0, 1);
         float targetAlphaSmoothed = -(float) Math.cos(targetAlpha * Math.PI) * 0.5f + 0.5f;
-        currentAlpha = lerp(currentAlpha, targetAlphaSmoothed, deltaTracker.getRealtimeDeltaTicks() * 0.2f);
+        currentAlpha = lerp(currentAlpha, targetAlphaSmoothed, deltaTracker.getRealtimeDeltaTicks() * (float)Config.OVERLAY_FADE_SPEED.getAsDouble());
 
-        guiGraphics.setColor(1, 1, 1, currentAlpha);
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        guiGraphics.blit(OVERLAY_TEXTURE, 0, 0, guiGraphics.guiWidth(), guiGraphics.guiHeight(), 0, 0,
-                guiGraphics.guiWidth(), guiGraphics.guiHeight(), guiGraphics.guiWidth(), guiGraphics.guiHeight());
+        if(currentAlpha > 0.001f) {
+            guiGraphics.setColor(1, 1, 1, currentAlpha * (float)Config.OVERLAY_OPACITY.getAsDouble());
+            RenderSystem.enableBlend();
+            RenderSystem.defaultBlendFunc();
+            guiGraphics.blit(OVERLAY_TEXTURE, 0, 0, guiGraphics.guiWidth(), guiGraphics.guiHeight(), 0, 0,
+                    guiGraphics.guiWidth(), guiGraphics.guiHeight(), guiGraphics.guiWidth(), guiGraphics.guiHeight());
+        }
+
         /*
         guiGraphics.setColor(1, 1, 1, 1);
         guiGraphics.drawString(
@@ -47,6 +65,14 @@ public class HealthOverlayLayer implements LayeredDraw.Layer {
                 String.format("Alpha: %.3f -> %.3f -> %.3f", targetAlpha, targetAlphaSmoothed, currentAlpha),
                 4, 4, 0xFFFFFFFF);
         */
+    }
+
+    private void renderFlashOverlay(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
+        currentFlashAlpha = lerp(currentFlashAlpha, 0, deltaTracker.getRealtimeDeltaTicks() * (float)Config.FLASH_FADE_SPEED.getAsDouble());
+        if(currentFlashAlpha > 0.001f) {
+            guiGraphics.setColor(0.8f, 0.1f, 0.1f, currentFlashAlpha * (float)Config.FLASH_OPACITY.getAsDouble());
+            guiGraphics.fill(0, 0, guiGraphics.guiWidth(), guiGraphics.guiHeight(), 0xFFFFFFFF);
+        }
     }
 
     private float lerp(float a, float b, float t) {
