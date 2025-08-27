@@ -39,14 +39,14 @@ public class HealthOverlayLayer implements LayeredDraw.Layer {
     }
 
     private void renderHealthOverlay(GuiGraphics guiGraphics, DeltaTracker deltaTracker, LocalPlayer player) {
-        int healthMax = Config.OVERLAY_END_HEALTH.getAsInt();
-        int healthMin = Config.OVERLAY_START_HEALTH.getAsInt();
-        if(healthMax < healthMin + 1) {
+        float fadeEndHealth = Config.OVERLAY_END_HEALTH.getAsInt();
+        float fadeStartHealth = Config.OVERLAY_START_HEALTH.getAsInt();
+        if(fadeStartHealth < fadeEndHealth + 1) {
             //Ensure separation of 1 health
-            healthMax = healthMin + 1;
+            fadeStartHealth = fadeEndHealth + 1;
         }
         float health = player.getHealth();
-        float targetAlpha = 1f - Math.clamp((health - healthMin) / (float) (healthMax - healthMin), 0, 1);
+        float targetAlpha = Math.clamp((health - fadeStartHealth) / (fadeEndHealth - fadeStartHealth), 0, 1);
         float targetAlphaSmoothed = -(float) Math.cos(targetAlpha * Math.PI) * 0.5f + 0.5f;
         currentAlpha = lerp(currentAlpha, targetAlphaSmoothed, deltaTracker.getRealtimeDeltaTicks() * (float)Config.OVERLAY_FADE_SPEED.getAsDouble());
 
@@ -58,13 +58,11 @@ public class HealthOverlayLayer implements LayeredDraw.Layer {
                     guiGraphics.guiWidth(), guiGraphics.guiHeight(), guiGraphics.guiWidth(), guiGraphics.guiHeight());
         }
 
-        /*
         guiGraphics.setColor(1, 1, 1, 1);
         guiGraphics.drawString(
                 Minecraft.getInstance().font,
                 String.format("Alpha: %.3f -> %.3f -> %.3f", targetAlpha, targetAlphaSmoothed, currentAlpha),
                 4, 4, 0xFFFFFFFF);
-        */
     }
 
     private void renderFlashOverlay(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {

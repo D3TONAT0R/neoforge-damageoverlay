@@ -13,5 +13,5 @@
   "healthoverlay.configuration.flashOpacity": "Flash Opacity",
   "healthoverlay.configuration.flashOpacity.tooltip": "The maximum opacity of the damage flash.",
   "healthoverlay.configuration.flashFadeSpeed": "Flash Fade Speed",
-  "healthoverlay.configuration.flashFadeSpeed.tooltip": "The speed at which the damage flash fades out. Higher is faster.",
+  "healthoverlay.configuration.flashFadeSpeed.tooltip": "The speed at which the damage flash fades out. Higher is faster."
 }

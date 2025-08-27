@@ -13,11 +13,14 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.gui.ConfigurationScreen;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.api.distmarker.Dist;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
-@Mod(HealthOverlay.MODID)
+@Mod(value = HealthOverlay.MODID, dist = Dist.CLIENT)
 public class HealthOverlay {
 	// Define mod id in a common place for everything to reference
 	public static final String MODID = "healthoverlay";
@@ -39,6 +42,11 @@ public class HealthOverlay {
 		// Register our mod's ModConfigSpec so that FML can create and load the config
 		// file for us
 		modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+
+		// Allows NeoForge to create a config screen for this mod's configs.
+        // The config screen is accessed by going to the Mods screen > clicking on your mod > clicking on config.
+        // Do not forget to add translations for your config options to the en_us.json file.
+        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
 	}
 
 	private void commonSetup(FMLCommonSetupEvent event) {
