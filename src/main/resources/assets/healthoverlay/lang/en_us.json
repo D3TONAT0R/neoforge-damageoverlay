@@ -2,6 +2,8 @@
   "healthoverlay.configuration.title": "Health Overlay Config",
   "healthoverlay.configuration.section.healthoverlay.common.toml": "Configuration",
   "healthoverlay.configuration.section.healthoverlay.common.toml.title": "Common",
+  "healthoverlay.configuration.brightness": "Brightness",
+  "healthoverlay.configuration.brightness.tooltip": "The brightness of all overlays.",
   "healthoverlay.configuration.overlayOpacity": "Overlay Opacity",
   "healthoverlay.configuration.overlayOpacity.tooltip": "The maximum opacity of the health overlay.",
   "healthoverlay.configuration.overlayStartHealth": "Overlay Start Health",

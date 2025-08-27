@@ -5,6 +5,10 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 public class Config {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
+    public static final ModConfigSpec.DoubleValue BRIGHTNESS = BUILDER
+            .comment("The brightness of all overlays.")
+            .defineInRange("brightness", 1.0, 0.2, 2.0);
+
     public static final ModConfigSpec.DoubleValue OVERLAY_OPACITY = BUILDER
             .comment("The maximum opacity of the health overlay.")
             .defineInRange("overlayOpacity", 0.75, 0.0, 2.0);

@@ -69,16 +69,17 @@ public class HealthOverlayLayer implements LayeredDraw.Layer {
         float targetAlphaSmoothed = -(float) Math.cos(targetAlpha * Math.PI) * 0.5f + 0.5f;
         currentAlpha = lerp(currentAlpha, targetAlphaSmoothed,
                 deltaTracker.getRealtimeDeltaTicks() * (float) Config.OVERLAY_FADE_SPEED.getAsDouble());
+        float brightness = (float)Config.BRIGHTNESS.getAsDouble();
 
         if (currentAlpha > 0.001f) {
-            guiGraphics.setColor(1, 1, 1, currentAlpha * (float) Config.OVERLAY_OPACITY.getAsDouble());
+            guiGraphics.setColor(brightness, brightness, brightness, currentAlpha * (float) Config.OVERLAY_OPACITY.getAsDouble());
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
             guiGraphics.blit(OVERLAY_TEXTURE, 0, 0, guiGraphics.guiWidth(), guiGraphics.guiHeight(), 0, 0,
                     guiGraphics.guiWidth(), guiGraphics.guiHeight(), guiGraphics.guiWidth(), guiGraphics.guiHeight());
         }
 
-        guiGraphics.setColor(1, 1, 1, 1);
+        guiGraphics.setColor(brightness, brightness, brightness, 1);
         guiGraphics.drawString(
                 Minecraft.getInstance().font,
                 String.format("Alpha: %.3f -> %.3f -> %.3f", targetAlpha, targetAlphaSmoothed, currentAlpha),
@@ -86,10 +87,12 @@ public class HealthOverlayLayer implements LayeredDraw.Layer {
     }
 
     private void renderFlashOverlay(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
+        float brightness = (float)Config.BRIGHTNESS.getAsDouble();
+        float flashOpacity = (float)Config.FLASH_OPACITY.getAsDouble();
         currentFlashAlpha = lerp(currentFlashAlpha, 0,
                 deltaTracker.getRealtimeDeltaTicks() * (float) Config.FLASH_FADE_SPEED.getAsDouble());
         if (currentFlashAlpha > 0.001f) {
-            guiGraphics.setColor(0.8f, 0.1f, 0.1f, currentFlashAlpha * (float) Config.FLASH_OPACITY.getAsDouble());
+            guiGraphics.setColor(0.8f * brightness, 0.1f * brightness, 0.1f * brightness, currentFlashAlpha * flashOpacity);
             guiGraphics.fill(0, 0, guiGraphics.guiWidth(), guiGraphics.guiHeight(), 0xFFFFFFFF);
         }
     }
