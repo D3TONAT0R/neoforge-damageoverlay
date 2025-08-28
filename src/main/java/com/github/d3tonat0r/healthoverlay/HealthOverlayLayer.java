@@ -79,11 +79,14 @@ public class HealthOverlayLayer implements LayeredDraw.Layer {
                     guiGraphics.guiWidth(), guiGraphics.guiHeight(), guiGraphics.guiWidth(), guiGraphics.guiHeight());
         }
 
+        //Debug stuff
+        /*
         guiGraphics.setColor(brightness, brightness, brightness, 1);
         guiGraphics.drawString(
                 Minecraft.getInstance().font,
                 String.format("Alpha: %.3f -> %.3f -> %.3f", targetAlpha, targetAlphaSmoothed, currentAlpha),
                 4, 4, 0xFFFFFFFF);
+        */
     }
 
     private void renderFlashOverlay(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
