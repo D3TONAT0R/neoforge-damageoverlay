@@ -33,6 +33,5 @@ public class Config {
             .comment("The speed at which the damage flash fades out. Higher is faster.")
             .defineInRange("flashFadeSpeed", 0.2, 0.01, 1.0);
 
-
     static final ModConfigSpec SPEC = BUILDER.build();
 }
