@@ -40,14 +40,19 @@ public class HealthOverlayLayer implements LayeredDraw.Layer {
             return;
         }
 
+        guiGraphics.pose().pushPose();
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
         renderHealthOverlay(guiGraphics, deltaTracker, player);
         renderFlashOverlay(guiGraphics, deltaTracker);
+        RenderSystem.disableBlend();
+        guiGraphics.pose().popPose();
     }
 
     private void checkForDamage(LocalPlayer player) {
         float currentHealth = player.getHealth();
         boolean survival = !player.isCreative() && !player.isSpectator();
-        //Check if at least half a heart of damage was dealt
+        // Check if at least half a heart of damage was dealt
         if (currentHealth < (lastKnownHealth + 0.499f)) {
             if (survival) {
                 float damage = lastKnownHealth - currentHealth;
@@ -69,34 +74,37 @@ public class HealthOverlayLayer implements LayeredDraw.Layer {
         float targetAlphaSmoothed = -(float) Math.cos(targetAlpha * Math.PI) * 0.5f + 0.5f;
         currentAlpha = lerp(currentAlpha, targetAlphaSmoothed,
                 deltaTracker.getRealtimeDeltaTicks() * (float) Config.OVERLAY_FADE_SPEED.getAsDouble());
-        float brightness = (float)Config.BRIGHTNESS.getAsDouble();
+        float brightness = (float) Config.BRIGHTNESS.getAsDouble();
 
         if (currentAlpha > 0.001f) {
-            guiGraphics.setColor(brightness, brightness, brightness, currentAlpha * (float) Config.OVERLAY_OPACITY.getAsDouble());
-            RenderSystem.enableBlend();
-            RenderSystem.defaultBlendFunc();
+            guiGraphics.setColor(brightness, brightness, brightness,
+                    currentAlpha * (float) Config.OVERLAY_OPACITY.getAsDouble());
             guiGraphics.blit(OVERLAY_TEXTURE, 0, 0, guiGraphics.guiWidth(), guiGraphics.guiHeight(), 0, 0,
                     guiGraphics.guiWidth(), guiGraphics.guiHeight(), guiGraphics.guiWidth(), guiGraphics.guiHeight());
+            guiGraphics.setColor(1, 1, 1, 1);
         }
 
-        //Debug stuff
+        // Debug stuff
         /*
-        guiGraphics.setColor(brightness, brightness, brightness, 1);
-        guiGraphics.drawString(
-                Minecraft.getInstance().font,
-                String.format("Alpha: %.3f -> %.3f -> %.3f", targetAlpha, targetAlphaSmoothed, currentAlpha),
-                4, 4, 0xFFFFFFFF);
-        */
+         * guiGraphics.setColor(brightness, brightness, brightness, 1);
+         * guiGraphics.drawString(
+         * Minecraft.getInstance().font,
+         * String.format("Alpha: %.3f -> %.3f -> %.3f", targetAlpha,
+         * targetAlphaSmoothed, currentAlpha),
+         * 4, 4, 0xFFFFFFFF);
+         */
     }
 
     private void renderFlashOverlay(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
-        float brightness = (float)Config.BRIGHTNESS.getAsDouble();
-        float flashOpacity = (float)Config.FLASH_OPACITY.getAsDouble();
+        float brightness = (float) Config.BRIGHTNESS.getAsDouble();
+        float flashOpacity = (float) Config.FLASH_OPACITY.getAsDouble();
         currentFlashAlpha = lerp(currentFlashAlpha, 0,
                 deltaTracker.getRealtimeDeltaTicks() * (float) Config.FLASH_FADE_SPEED.getAsDouble());
         if (currentFlashAlpha > 0.001f) {
-            guiGraphics.setColor(0.8f * brightness, 0.1f * brightness, 0.1f * brightness, currentFlashAlpha * flashOpacity);
+            guiGraphics.setColor(0.8f * brightness, 0.1f * brightness, 0.1f * brightness,
+                    currentFlashAlpha * flashOpacity);
             guiGraphics.fill(0, 0, guiGraphics.guiWidth(), guiGraphics.guiHeight(), 0xFFFFFFFF);
+            guiGraphics.setColor(1, 1, 1, 1);
         }
     }
 
