@@ -31,10 +31,7 @@ public class HealthOverlayLayer implements LayeredDraw.Layer {
 
         checkForDamage(player);
 
-        if (Minecraft.getInstance().options.hideGui) {
-            currentAlpha = 0;
-            return;
-        }
+        boolean visible = !Minecraft.getInstance().options.hideGui;
         if (player.isCreative() || player.isSpectator()) {
             currentAlpha = 0;
             return;
@@ -43,8 +40,8 @@ public class HealthOverlayLayer implements LayeredDraw.Layer {
         guiGraphics.pose().pushPose();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        renderHealthOverlay(guiGraphics, deltaTracker, player);
-        renderFlashOverlay(guiGraphics, deltaTracker);
+        renderHealthOverlay(guiGraphics, deltaTracker, player, visible);
+        renderFlashOverlay(guiGraphics, deltaTracker, visible);
         RenderSystem.disableBlend();
         guiGraphics.pose().popPose();
     }
@@ -62,7 +59,7 @@ public class HealthOverlayLayer implements LayeredDraw.Layer {
         lastKnownHealth = currentHealth;
     }
 
-    private void renderHealthOverlay(GuiGraphics guiGraphics, DeltaTracker deltaTracker, LocalPlayer player) {
+    private void renderHealthOverlay(GuiGraphics guiGraphics, DeltaTracker deltaTracker, LocalPlayer player, boolean visible) {
         float fadeEndHealth = Config.OVERLAY_END_HEALTH.getAsInt();
         float fadeStartHealth = Config.OVERLAY_START_HEALTH.getAsInt();
         if (fadeStartHealth < fadeEndHealth + 1) {
@@ -76,7 +73,7 @@ public class HealthOverlayLayer implements LayeredDraw.Layer {
                 deltaTracker.getRealtimeDeltaTicks() * (float) Config.OVERLAY_FADE_SPEED.getAsDouble());
         float brightness = (float) Config.BRIGHTNESS.getAsDouble();
 
-        if (currentAlpha > 0.001f) {
+        if (currentAlpha > 0.001f && visible) {
             guiGraphics.setColor(brightness, brightness, brightness,
                     currentAlpha * (float) Config.OVERLAY_OPACITY.getAsDouble());
             guiGraphics.blit(OVERLAY_TEXTURE, 0, 0, guiGraphics.guiWidth(), guiGraphics.guiHeight(), 0, 0,
@@ -95,12 +92,12 @@ public class HealthOverlayLayer implements LayeredDraw.Layer {
          */
     }
 
-    private void renderFlashOverlay(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
+    private void renderFlashOverlay(GuiGraphics guiGraphics, DeltaTracker deltaTracker, boolean visible) {
         float brightness = (float) Config.BRIGHTNESS.getAsDouble();
         float flashOpacity = (float) Config.FLASH_OPACITY.getAsDouble();
         currentFlashAlpha = lerp(currentFlashAlpha, 0,
                 deltaTracker.getRealtimeDeltaTicks() * (float) Config.FLASH_FADE_SPEED.getAsDouble());
-        if (currentFlashAlpha > 0.001f) {
+        if (currentFlashAlpha > 0.001f && visible) {
             guiGraphics.setColor(0.8f * brightness, 0.1f * brightness, 0.1f * brightness,
                     currentFlashAlpha * flashOpacity);
             guiGraphics.fill(0, 0, guiGraphics.guiWidth(), guiGraphics.guiHeight(), 0xFFFFFFFF);
