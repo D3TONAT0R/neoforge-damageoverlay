@@ -1,4 +1,4 @@
-package com.github.d3tonat0r.healthoverlay;
+package com.github.d3tonat0r.damageoverlay;
 
 import net.neoforged.neoforge.common.ModConfigSpec;
 

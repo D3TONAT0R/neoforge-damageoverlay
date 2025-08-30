@@ -1,4 +1,4 @@
-package com.github.d3tonat0r.healthoverlay;
+package com.github.d3tonat0r.damageoverlay;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -9,9 +9,9 @@ import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
 
-public class HealthOverlayLayer implements LayeredDraw.Layer {
+public class DamageOverlayLayer implements LayeredDraw.Layer {
 
-    private static final ResourceLocation OVERLAY_TEXTURE = ResourceLocation.fromNamespaceAndPath(HealthOverlay.MODID,
+    private static final ResourceLocation OVERLAY_TEXTURE = ResourceLocation.fromNamespaceAndPath(DamageOverlay.MODID,
             "textures/gui/damage_overlay.png");
 
     private float currentAlpha = 0;

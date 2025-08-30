@@ -1,0 +1,19 @@
+{
+  "damageoverlay.configuration.title": "Damage Overlay Config",
+  "damageoverlay.configuration.section.damageoverlay.common.toml": "Configuration",
+  "damageoverlay.configuration.section.damageoverlay.common.toml.title": "Common",
+  "damageoverlay.configuration.brightness": "Brightness",
+  "damageoverlay.configuration.brightness.tooltip": "The brightness of all overlays.",
+  "damageoverlay.configuration.overlayOpacity": "Overlay Opacity",
+  "damageoverlay.configuration.overlayOpacity.tooltip": "The maximum opacity of the health overlay.",
+  "damageoverlay.configuration.overlayStartHealth": "Overlay Start Health",
+  "damageoverlay.configuration.overlayStartHealth.tooltip": "The health level at which the overlay starts becoming visible, in half-hearts.",
+  "damageoverlay.configuration.overlayEndHealth": "Overlay End Health",
+  "damageoverlay.configuration.overlayEndHealth.tooltip": "The health level at which the overlay becomes fully opaque, in half-hearts.",
+  "damageoverlay.configuration.overlayFadeSpeed": "Overlay Fade Speed",
+  "damageoverlay.configuration.overlayFadeSpeed.tooltip": "The speed at which the overlay fades in and out. Higher is faster.",
+  "damageoverlay.configuration.flashOpacity": "Flash Opacity",
+  "damageoverlay.configuration.flashOpacity.tooltip": "The maximum opacity of the damage flash.",
+  "damageoverlay.configuration.flashFadeSpeed": "Flash Fade Speed",
+  "damageoverlay.configuration.flashFadeSpeed.tooltip": "The speed at which the damage flash fades out. Higher is faster."
+}
