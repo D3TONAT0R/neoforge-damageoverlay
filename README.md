@@ -1,5 +1,5 @@
 # Damage Overlay
-A mod for Minecraft (NeoForge)
+A mod for Minecraft (Java Edition 1.21.1 NeoForge)
 
 Damage Overlay is a small mod that renders a red screen overlay based on the player's current health, making low health and incoming damage much more noticable to the player.
 
